@@ -19,8 +19,8 @@ static NSString *const kFrameworkLibraryRegExp = @"#import <.*>";
  * NOTE : if you customize original role, labelForClassRole must
  * begin with kClassRoleLabelPrefix.
  */
-static NSString *const kClassRoleLabelPrefix = @"// :: ";
-static NSString *const kClassRoleLabelSuffix = @" ::\n";
+static NSString *const kClassRoleLabelPrefix = @"";
+static NSString *const kClassRoleLabelSuffix = @"\n";
 
 #pragma mark - public methods
 - (instancetype)initWithOriginalClassName:(NSString *)originalClassName
@@ -62,11 +62,11 @@ static NSString *const kClassRoleLabelSuffix = @" ::\n";
         case ObjCImportClassRoleSelf:
             return @"";
         case ObjCImportClassRoleFramework:
-            return [NSString stringWithFormat:@"%@%@%@", kClassRoleLabelPrefix, @"Framework",
+            return [NSString stringWithFormat:@"%@%@%@", kClassRoleLabelPrefix, @"",
                                               kClassRoleLabelSuffix];
         case ObjCImportClassRoleOther:
             return [NSString
-                stringWithFormat:@"%@%@%@", kClassRoleLabelPrefix, @"Other", kClassRoleLabelSuffix];
+                stringWithFormat:@"%@%@%@", kClassRoleLabelPrefix, @"", kClassRoleLabelSuffix];
     }
 }
 
