@@ -14,7 +14,7 @@ There are two ways for install this plugin.
 just paste this on terminal:
 
 ```
-curl -fsSL http://github.com/manji602/ImportSorter/raw/master/Scripts/install.sh | sh
+curl -fsSL http://github.com/Lightricks/ImportSorter/raw/master/Scripts/install.sh | sh
 ```
 
 ### Build Project On Xcode
@@ -22,7 +22,7 @@ curl -fsSL http://github.com/manji602/ImportSorter/raw/master/Scripts/install.sh
 First, clone this repository onto your computer and open xcodeproj.
 
 ```
-$ git clone git@github.com:manji602/ImportSorter.git
+$ git clone git@github.com:Lightricks/ImportSorter.git
 $ cd ImportSorter
 $ open ImportSorter.xcodeproj
 ```
