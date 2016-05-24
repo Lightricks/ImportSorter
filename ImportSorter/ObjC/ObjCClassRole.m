@@ -60,7 +60,7 @@ static NSString *const kClassRoleLabelSuffix = @"\n";
 {
     switch (classRole) {
         case ObjCImportClassRoleSelf:
-            return @"";
+            return @"\n";
         case ObjCImportClassRoleFramework:
             return [NSString stringWithFormat:@"%@%@%@", kClassRoleLabelPrefix, @"",
                                               kClassRoleLabelSuffix];
