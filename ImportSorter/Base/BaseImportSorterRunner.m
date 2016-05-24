@@ -39,34 +39,65 @@
 
 - (NSRange)getReplacementRange
 {
-    NSInteger replaceLength = 0;
-    NSInteger replaceBeginLocation = 0;
-    NSInteger replaceEndLocation = 0;
-    BOOL hasSetBeginLocation = NO;
+  NSRange range = [self getRangeStartingFromLastLineInPrefix];
 
-    NSString *sourceString = _sourceCodeView.textStorage.string;
-    NSRange range = NSMakeRange(0, sourceString.length);
+  NSInteger replaceBeginLocation = range.location;
+  NSInteger replaceEndLocation = [self getLastLineLocationInImports:range];
 
-    NSMutableArray *importDeclarationsArray = [NSMutableArray array];
-    while (range.length > 0) {
-        NSRange subRange = [sourceString lineRangeForRange:NSMakeRange(range.location, 0)];
+  NSInteger replaceLength = MAX(replaceEndLocation - replaceBeginLocation, 0);
+  return NSMakeRange(replaceBeginLocation, replaceLength);
+}
 
-        NSString *line = [sourceString substringWithRange:subRange];
-        if ([line hasPrefix:_importDeclarationPrefix] || [line hasPrefix:_classRoleLabelPrefix]) {
-            [importDeclarationsArray addObject:line];
-            if (!hasSetBeginLocation) {
-                hasSetBeginLocation = YES;
-                replaceBeginLocation = subRange.location;
-            }
-            replaceEndLocation = subRange.location + subRange.length;
-        }
+- (NSRange)getRangeStartingFromLastLineInPrefix
+{
+  NSString *sourceString = _sourceCodeView.textStorage.string;
+  NSRange range = NSMakeRange(0, sourceString.length);
 
-        range.location = NSMaxRange(subRange);
-        range.length -= subRange.length;
+  NSRange subRange = [sourceString lineRangeForRange:NSMakeRange(range.location, 0)];
+  NSString *line = [sourceString substringWithRange:subRange];
+
+  while (![line hasPrefix:@"//"]) {
+    range = [self getRangeStartingFromNextLine:range currentLine:subRange];
+
+    subRange = [sourceString lineRangeForRange:NSMakeRange(range.location, 0)];
+    line = [sourceString substringWithRange:subRange];
+  }
+
+  while ([line hasPrefix:@"//"]) {
+    range = [self getRangeStartingFromNextLine:range currentLine:subRange];
+
+    subRange = [sourceString lineRangeForRange:NSMakeRange(range.location, 0)];
+    line = [sourceString substringWithRange:subRange];
+  }
+
+  return range;
+}
+
+- (NSInteger)getLastLineLocationInImports:(NSRange)firstLine
+{
+  NSInteger lastLineLocation = 0;
+
+  NSRange range = firstLine;
+  NSString *sourceString = _sourceCodeView.textStorage.string;
+  NSRange subRange = [sourceString lineRangeForRange:NSMakeRange(range.location, 0)];
+  NSString *line = [sourceString substringWithRange:subRange];
+
+  while (range.length > 0) {
+    subRange = [sourceString lineRangeForRange:NSMakeRange(range.location, 0)];
+    line = [sourceString substringWithRange:subRange];
+
+    if ([line hasPrefix:_importDeclarationPrefix]) {
+      lastLineLocation = NSMaxRange(subRange);
     }
-    replaceLength = MAX(replaceEndLocation - replaceBeginLocation, 0);
+    range = [self getRangeStartingFromNextLine:range currentLine:subRange];
+  }
 
-    return NSMakeRange(replaceBeginLocation, replaceLength);
+  return lastLineLocation;
+}
+
+- (NSRange)getRangeStartingFromNextLine:(NSRange)currentRange currentLine:(NSRange)currentLine
+{
+  return NSMakeRange(NSMaxRange(currentLine), currentRange.length - currentLine.length);
 }
 
 @end
