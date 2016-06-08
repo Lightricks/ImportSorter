@@ -114,7 +114,7 @@ static NSString *const IMPORT_SORT_SHORTCUT_KEY = @"s";
     IDESourceCodeDocument *document = [XcodeHelper currentDocument];
     NSString *pathExtension = [document.fileURL.absoluteString pathExtension];
 
-    return [@[ @"m", @"h" ] containsObject:pathExtension];
+    return [@[ @"m", @"h", @"mm" ] containsObject:pathExtension];
 }
 
 - (BOOL)isSwiftFile
