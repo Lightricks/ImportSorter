@@ -41,7 +41,8 @@ static NSString *const kClassRoleLabelSuffix = @"\n";
 {
     NSString *selfClassRegExp =
         [NSString stringWithFormat:@"%@%@%@", @"#import \"", _originalClassName, @".h\""];
-    if ([self isMatchPattern:selfClassRegExp targetString:targetString]) {
+    if ([self isMatchPattern:selfClassRegExp targetString:targetString] ||
+        [self isTestFileOfClass:targetString]) {
         return ObjCImportClassRoleSelf;
     }
 
@@ -51,6 +52,19 @@ static NSString *const kClassRoleLabelSuffix = @"\n";
     }
 
     return ObjCImportClassRoleOther;
+}
+
+- (BOOL)isTestFileOfClass:(NSString *)targetString {
+  NSString *testSuffix = @"Spec";
+  if (![_originalClassName hasSuffix:testSuffix]) {
+    return NO;
+  }
+  NSUInteger indexWithoutSpec = [_originalClassName length] - [testSuffix length];
+  NSString *classNameWithoutSpec = [_originalClassName substringToIndex:(indexWithoutSpec)];
+
+  NSString *selfClassRegExp =
+      [NSString stringWithFormat:@"%@%@%@", @"#import \"", classNameWithoutSpec, @".h\""];
+  return [self isMatchPattern:selfClassRegExp targetString:targetString];
 }
 
 /**
