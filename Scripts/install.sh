@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=1.0.4
+VERSION=1.0.6
 DOWNLOAD_URI="http://github.com/Lightricks/ImportSorter/releases/download/${VERSION}/ImportSorter.tar.gz"
 PLUGINS_DIR="${HOME}/Library/Application Support/Developer/Shared/Xcode/Plug-ins"
 
